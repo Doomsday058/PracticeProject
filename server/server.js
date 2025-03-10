@@ -33,16 +33,18 @@ app.get('/api/items', async (req, res) => {
   }
 });
 
-// Example API endpoint: create an item
 app.post('/api/items', async (req, res) => {
+  console.log('Получили данные:', req.body); // Добавьте этот вывод
   try {
     const newItem = new Item(req.body);
     const saved = await newItem.save();
     res.status(201).json(saved);
   } catch (err) {
+    console.error('Ошибка при сохранении:', err);
     res.status(400).json({ error: 'Failed to create item' });
   }
 });
+
 
 // Start server
 const PORT = process.env.PORT || 5000;
