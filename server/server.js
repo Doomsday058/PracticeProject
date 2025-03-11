@@ -1,53 +1,40 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
+import express from 'express'
+import cors from 'cors'
+import dotenv from 'dotenv'
+import dbConnect from './lib/db.js'
+import Product from './lib/models/Product.js'
 
-const app = express();
+dotenv.config() // Подключаем .env
 
-// Middleware
-app.use(express.json());            // parse JSON bodies
-app.use(cors());                    // enable CORS for all origins (в реальном проекте можно настроить origin)
+const app = express()
+app.use(cors())        // Разрешаем CORS
+app.use(express.json()) // Для парсинга JSON
 
-// MongoDB connection
-const mongoURI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/myapp';
-mongoose.connect(mongoURI)
-  .then(() => console.log('MongoDB connected'))
-  .catch(err => console.error('MongoDB connection error:', err));
-
-// Simple schema and model (optional example)
-const ItemSchema = new mongoose.Schema({ name: String });
-const Item = mongoose.model('Item', ItemSchema);
-
-// Routes
-app.get('/', (req, res) => {
-  res.send('API is running');
-});
-
-// Example API endpoint: get all items
-app.get('/api/items', async (req, res) => {
+// Маршрут для получения списка товаров
+app.get('/api/products', async (req, res) => {
   try {
-    const items = await Item.find();
-    res.json(items);
-  } catch (err) {
-    res.status(500).json({ error: 'Failed to fetch items' });
+    await dbConnect() // Устанавливаем соединение с БД
+    const products = await Product.find({})
+    res.status(200).json(products)
+  } catch (error) {
+    console.error('Ошибка при получении товаров:', error)
+    res.status(500).json({ error: 'Server error' })
   }
-});
+})
 
-app.post('/api/items', async (req, res) => {
-  console.log('Получили данные:', req.body); // Добавьте этот вывод
+app.post('/api/products', async (req, res) => {
   try {
-    const newItem = new Item(req.body);
-    const saved = await newItem.save();
-    res.status(201).json(saved);
-  } catch (err) {
-    console.error('Ошибка при сохранении:', err);
-    res.status(400).json({ error: 'Failed to create item' });
+    await dbConnect()
+    const newProduct = await Product.create(req.body)
+    res.status(201).json(newProduct)
+  } catch (error) {
+    console.error('Ошибка при создании товара:', error)
+    res.status(500).json({ error: 'Server error' })
   }
-});
+})
 
-
-// Start server
-const PORT = process.env.PORT || 5000;
+// Запуск сервера
+const PORT = process.env.PORT || 3001
 app.listen(PORT, () => {
-  console.log(`Express server listening on port ${PORT}`);
-});
+  console.log(`Сервер запущен на порту ${PORT}`)
+})

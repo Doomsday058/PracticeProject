@@ -1,33 +1,45 @@
-'use client';
+// app/page.tsx
+import Link from 'next/link'
+import ProductCard from './components/ProductCard'
+import styles from './page.module.css'
 
-import Head from 'next/head';
-import { useEffect, useState } from 'react';
-import AddItem from './AddItem'; // если AddItem находится в той же директории
+async function getProducts() {
+  const res = await fetch('http://localhost:3001/api/products', {
+    next: { revalidate: 60 }
+  })
+  if (!res.ok) {
+    throw new Error('Не удалось загрузить список товаров')
+  }
+  return res.json()
+}
 
-export default function Home() {
-  const [items, setItems] = useState([]);
-
-  useEffect(() => {
-    fetch(process.env.NEXT_PUBLIC_API_URL + '/api/items')
-      .then((res) => res.json())
-      .then((data) => setItems(data))
-      .catch((err) => console.error('Error fetching items:', err));
-  }, []);
+export default async function HomePage() {
+  const products = await getProducts()
 
   return (
-    <div>
-      <Head>
-        <title>My App</title>
-      </Head>
-      <h1>Добро пожаловать в My App!</h1>
-      <p>Ниже список элементов из базы данных (если есть):</p>
-      <ul>
-        {items.map((item) => (
-          <li key={item._id}>{item.name}</li>
-        ))}
-      </ul>
-      <hr />
-      <AddItem />
-    </div>
-  );
+    <>
+      {/* Hero-секция */}
+      <section className={styles.hero}>
+        <h1 className={styles.heroTitle}>
+          VOSTOK TRADE COMPANY
+        </h1>
+        <p className={styles.heroSubtitle}>
+          Оптовая продажа высококачественных напитков
+        </p>
+        <Link href="/products" className={styles.heroButton}>
+          Посмотреть продукцию
+        </Link>
+      </section>
+
+      {/* Секция с карточками товаров */}
+      <section className={styles.productsSection}>
+        <h2 className={styles.productsTitle}>Наша продукция</h2>
+        <div className={styles.productsGrid}>
+          {products.map((product: any) => (
+            <ProductCard key={product._id} product={product} />
+          ))}
+        </div>
+      </section>
+    </>
+  )
 }
