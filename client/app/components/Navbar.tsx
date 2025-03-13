@@ -1,67 +1,48 @@
-'use client'
+// app/components/Navbar.tsx
+'use client';
 
-import { useState } from 'react'
-import Link from 'next/link'
-import { FaBars } from 'react-icons/fa'
-
+import { useState } from 'react';
+import Link from 'next/link';
+import { FaBars, FaTimes } from 'react-icons/fa';
 export default function Navbar() {
-  const [isOpen, setIsOpen] = useState(false)
-
-  const toggleMenu = () => {
-    setIsOpen(!isOpen)
-  }
-
+  const [isOpen, setIsOpen] = useState(false);
+  
+  const toggleMenu = () => setIsOpen(!isOpen);
+  
   return (
-    <>
-      <div className={`menu ${isOpen ? 'open' : ''}`} onClick={toggleMenu}>
-        <FaBars />
+    <header className="fixed top-0 left-0 w-full z-50 bg-black bg-opacity-70 backdrop-blur-lg shadow-md">
+      <div className="max-w-7xl mx-auto flex justify-between items-center p-4">
+        <div className="text-2xl font-bold font-russo">
+          VOSTOK TRADE COMPANY
+        </div>
+        <nav>
+          {/* Десктопное меню */}
+          <ul className="hidden md:flex space-x-8 text-lg">
+            <li><Link href="#hero" scroll={false}>Главная</Link></li>
+            <li><Link href="#about" scroll={false}>О компании</Link></li>
+            <li><Link href="#products" scroll={false}>Продукция</Link></li>
+            <li><Link href="#contact" scroll={false}>Контакты</Link></li>
+          </ul>
+          {/* Кнопка-гамбургер для мобильных */}
+          <div className="md:hidden">
+            <button onClick={toggleMenu} className="text-white text-2xl">
+              {isOpen ? <FaTimes /> : <FaBars />}
+            </button>
+          </div>
+        </nav>
       </div>
-      <nav className={`navbar ${isOpen ? 'open' : ''}`}>
-        <ul>
-          <li><Link href="#home">Главная</Link></li>
-          <li><Link href="#products">Продукция</Link></li>
-          <li><Link href="#about">О нас</Link></li>
-          <li><Link href="#contact">Контакты</Link></li>
-        </ul>
-      </nav>
-
-      <style jsx>{`
-        .menu {
-          position: absolute;
-          top: 20px;
-          left: 20px;
-          font-size: 30px;
-          cursor: pointer;
-          z-index: 1000;
-        }
-        .navbar {
-          position: fixed;
-          top: 0;
-          left: 0;
-          width: 100%;
-          background: rgba(0, 0, 0, 0.6);
-          color: white;
-          transition: top 0.3s ease;
-          z-index: 1000;
-        }
-        .navbar ul {
-          display: flex;
-          justify-content: center;
-          padding: 1rem;
-          list-style: none;
-        }
-        .navbar li {
-          margin: 0 20px;
-        }
-        .navbar a {
-          color: white;
-          text-decoration: none;
-          font-weight: bold;
-        }
-        .navbar.open {
-          top: 0;
-        }
-      `}</style>
-    </>
-  )
+      {/* Мобильное меню */}
+      {isOpen && (
+        <div className="md:hidden bg-black bg-opacity-90">
+          <ul className="flex flex-col space-y-4 p-4">
+            <li><Link href="#hero" scroll={false} onClick={toggleMenu}>Главная</Link></li>
+            <li><Link href="#about" scroll={false} onClick={toggleMenu}>О компании</Link></li>
+            <li><Link href="#products" scroll={false} onClick={toggleMenu}>Продукция</Link></li>
+            <li><Link href="#contact" scroll={false} onClick={toggleMenu}>Контакты</Link></li>
+          </ul>
+        </div>
+      )}
+    </header>
+  );
 }
+ 

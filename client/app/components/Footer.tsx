@@ -1,13 +1,8 @@
 // app/components/Footer.tsx
 export default function Footer() {
   return (
-    <footer style={{
-      marginTop: '2rem',
-      textAlign: 'center',
-      padding: '1rem',
-      backgroundColor: '#1e1e1e'
-    }}>
+    <footer className="py-4 bg-black bg-opacity-90 text-center">
       <p>&copy; {new Date().getFullYear()} VOSTOK TRADE COMPANY. Все права защищены.</p>
     </footer>
-  )
+  );
 }

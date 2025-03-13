@@ -1,32 +1,20 @@
 // app/components/ProductCard.tsx
-import Link from 'next/link'
-import styles from './ProductCard.module.css'
-
 type Product = {
-  _id: string
-  name: string
-  price: number
-  description?: string
-  image?: string
-}
-
-interface ProductCardProps {
-  product: Product
-}
-
-export default function ProductCard({ product }: ProductCardProps) {
-  return (
-    <Link href={`/products/${product._id}`} className={styles.cardLink}>
-      <div className={styles.card}>
-        <img
-          src={product.image || '/placeholder.png'}
-          alt={product.name}
-          className={styles.cardImage}
-        />
-        <h3 className={styles.cardTitle}>{product.name}</h3>
-        <p className={styles.cardPrice}>Цена: {product.price} руб.</p>
-        <p className={styles.cardDescription}>{product.description}</p>
+    id: number;
+    title: string;
+    image: string;
+    description: string;
+  };
+  
+  export default function ProductCard({ product }: { product: Product }) {
+    return (
+      <div className="bg-gray-800 rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition-transform">
+        <img src={product.image} alt={product.title} className="w-full h-48 object-cover" />
+        <div className="p-4">
+          <h3 className="text-xl font-russo mb-2">{product.title}</h3>
+          <p className="text-gray-300">{product.description}</p>
+        </div>
       </div>
-    </Link>
-  )
-}
+    );
+  }
+  
