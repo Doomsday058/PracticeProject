@@ -1,4 +1,7 @@
 @import "tailwindcss";
+/* Вставь это в globals.css */
+@import 'aos/dist/aos.css';
+
 /* Включаем плавную прокрутку */
 html {
   scroll-behavior: smooth;
@@ -18,4 +21,28 @@ html {
 /* Пользовательский класс для фирменного шрифта */
 .font-russo {
   font-family: 'Russo One', sans-serif;
+}
+/* Включаем плавную прокрутку */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Фон для всех секций */
+.common-bg-section {
+  background-image: url('/hero-bg.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;  /* Эффект параллакса */
+  position: relative;
+  isolation: isolate;
+  transition: background-color 1s ease-in-out; /* Плавный переход фона */
+}
+
+/* Убираем старое затемнение и добавляем новое */
+.common-bg-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7); /* Тёмное затемнение */
+  z-index: -1; /* Чтобы не перекрывать контент */
 }
