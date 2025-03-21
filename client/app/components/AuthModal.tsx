@@ -11,15 +11,16 @@ type AuthModalProps = {
 };
 
 type FormMode = 'login' | 'register' | 'forgot';
+type UserType = 'personal' | 'business';
 
 export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [mode, setMode] = useState<FormMode>('login');
+  const [userType, setUserType] = useState<UserType>('personal');
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [registerForm, setRegisterForm] = useState({ 
     companyName: '', 
     email: '', 
-    password: '', 
-    inn: '' 
+    password: ''
   });
   const [forgotForm, setForgotForm] = useState({ email: '' });
   const [error, setError] = useState('');
@@ -39,6 +40,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
   const handleForgotChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForgotForm({ ...forgotForm, [e.target.name]: e.target.value });
+  };
+
+  const handleUserTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setUserType(e.target.value as UserType);
+    // Если выбран личный аккаунт, очищаем поле компании
+    if (e.target.value === 'personal') {
+      setRegisterForm({ ...registerForm, companyName: '' });
+    }
   };
 
   const handleLoginSubmit = async (e: React.FormEvent) => {
@@ -74,10 +83,18 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
     setIsLoading(true);
     
     try {
+      // Создаем объект с данными для отправки
+      const userData = {
+        ...registerForm,
+        userType,
+        // Очищаем название компании, если это личный аккаунт
+        companyName: userType === 'personal' ? '' : registerForm.companyName
+      };
+      
       const response = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(registerForm)
+        body: JSON.stringify(userData)
       });
       
       const data = await response.json();
@@ -143,7 +160,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               type="email" 
               value={loginForm.email} 
               onChange={handleLoginChange} 
-              className="w-full p-2 rounded bg-gray-700 text-white" 
+              className="w-full p-3 rounded bg-gray-700 text-white" 
               required 
             />
           </div>
@@ -154,14 +171,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               type="password" 
               value={loginForm.password} 
               onChange={handleLoginChange} 
-              className="w-full p-2 rounded bg-gray-700 text-white" 
+              className="w-full p-3 rounded bg-gray-700 text-white" 
               required 
             />
           </div>
           <button 
             type="submit" 
             disabled={isLoading}
-            className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded transition-colors text-white disabled:opacity-70"
+            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded transition-colors text-white disabled:opacity-70"
           >
             {isLoading ? 'Вход...' : 'Войти'}
           </button>
@@ -187,16 +204,31 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       {mode === 'register' && (
         <form onSubmit={handleRegisterSubmit} className="space-y-4">
           <div>
-            <label className="block text-white mb-2">Название компании</label>
-            <input 
-              name="companyName" 
-              type="text" 
-              value={registerForm.companyName} 
-              onChange={handleRegisterChange} 
-              className="w-full p-2 rounded bg-gray-700 text-white" 
-              required 
-            />
+            <label className="block text-white mb-2">Тип аккаунта</label>
+            <select
+              value={userType}
+              onChange={handleUserTypeChange}
+              className="w-full p-3 rounded bg-gray-700 text-white"
+            >
+              <option value="personal">Физическое лицо</option>
+              <option value="business">Юридическое лицо</option>
+            </select>
           </div>
+
+          {userType === 'business' && (
+            <div>
+              <label className="block text-white mb-2">Название компании</label>
+              <input 
+                name="companyName" 
+                type="text" 
+                value={registerForm.companyName} 
+                onChange={handleRegisterChange} 
+                className="w-full p-3 rounded bg-gray-700 text-white" 
+                required={userType === 'business'}
+              />
+            </div>
+          )}
+
           <div>
             <label className="block text-white mb-2">Email</label>
             <input 
@@ -204,21 +236,11 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               type="email" 
               value={registerForm.email} 
               onChange={handleRegisterChange} 
-              className="w-full p-2 rounded bg-gray-700 text-white" 
+              className="w-full p-3 rounded bg-gray-700 text-white" 
               required 
             />
           </div>
-          <div>
-            <label className="block text-white mb-2">ИНН</label>
-            <input 
-              name="inn" 
-              type="text" 
-              value={registerForm.inn} 
-              onChange={handleRegisterChange} 
-              className="w-full p-2 rounded bg-gray-700 text-white" 
-              required 
-            />
-          </div>
+          
           <div>
             <label className="block text-white mb-2">Пароль</label>
             <input 
@@ -226,17 +248,19 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               type="password" 
               value={registerForm.password} 
               onChange={handleRegisterChange} 
-              className="w-full p-2 rounded bg-gray-700 text-white" 
+              className="w-full p-3 rounded bg-gray-700 text-white" 
               required 
             />
           </div>
+          
           <button 
             type="submit" 
             disabled={isLoading}
-            className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded transition-colors text-white disabled:opacity-70"
+            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded transition-colors text-white disabled:opacity-70"
           >
             {isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
           </button>
+          
           <div className="text-sm mt-4 text-center">
             <button 
               type="button" 
@@ -261,14 +285,14 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
               type="email" 
               value={forgotForm.email} 
               onChange={handleForgotChange} 
-              className="w-full p-2 rounded bg-gray-700 text-white" 
+              className="w-full p-3 rounded bg-gray-700 text-white" 
               required 
             />
           </div>
           <button 
             type="submit" 
             disabled={isLoading}
-            className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded transition-colors text-white disabled:opacity-70"
+            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded transition-colors text-white disabled:opacity-70"
           >
             {isLoading ? 'Отправка...' : 'Восстановить пароль'}
           </button>
@@ -301,7 +325,7 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           </p>
           <button 
             onClick={() => switchMode('login')}
-            className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 rounded transition-colors text-white"
+            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded transition-colors text-white"
           >
             Вернуться ко входу
           </button>

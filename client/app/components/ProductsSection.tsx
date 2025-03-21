@@ -1,9 +1,9 @@
 //app/components/ProductsSection
 
 'use client';
-import ProductCard from './ProductCard';
+import UpdatedProductCard from './ProductCard';
 
-// Обновлено: '_id' вместо 'id', добавлены поля 'price' и 'details'
+// Обновленные данные о продуктах
 const products = [
   { 
     _id: "1", 
@@ -51,12 +51,18 @@ const products = [
 
 export default function ProductsSection() {
   return (
-    <section id="products" className="py-20 common-bg-section">
+    <section id="products" className="py-16 common-bg-section">
       <div className="max-w-7xl mx-auto px-4 text-white">
-        <h2 className="text-3xl font-russo text-center mb-12">Наша продукция</h2>
+        <div className="text-center mb-12">
+          <h2 className="text-4xl font-russo mb-4">Наша продукция</h2>
+          <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+            Предлагаем широкий ассортимент высококачественных напитков для оптовых закупок. Каждый продукт тщательно отобран для наших клиентов.
+          </p>
+        </div>
+        
         <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {products.map(product => (
-            <ProductCard key={product._id} product={product} />
+            <UpdatedProductCard key={product._id} product={product} />
           ))}
         </div>
       </div>

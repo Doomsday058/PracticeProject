@@ -1,9 +1,9 @@
 //app/components/ProductDetailModal
 'use client';
 import { useState } from 'react';
-import Modal from './Modal';
 import { useUser } from './UserContext';
 import AuthModal from './AuthModal';
+import Modal from './Modal';
 
 type Product = {
   _id: string;
@@ -60,7 +60,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
             <img 
               src={product.image} 
               alt={product.title} 
-              className="w-full h-48 object-cover"
+              className="w-full h-52 object-cover"
             />
           </div>
           

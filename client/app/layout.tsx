@@ -1,7 +1,9 @@
+//app/layout.tsx
 'use client';
 import { useEffect } from 'react';
 import { UserProvider } from './components/UserContext';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import AOS from 'aos';
 import './styles/globals.css';
 
@@ -29,6 +31,7 @@ export default function RootLayout({
         <UserProvider>
           <Navbar />
           <main>{children}</main>
+          <Footer />
         </UserProvider>
       </body>
     </html>

@@ -12,7 +12,7 @@ export default function HomePage() {
       <HeroSection />
       <AboutSection />
       <ProductsSection />
-      <PriceRequestForm /> {/* Блок получения прайс-листа */}
+      <PriceRequestForm />
       <ReviewsSection />
       <ContactSection />
     </>

@@ -1,7 +1,7 @@
 //app/components/ProductCard
 'use client';
 import { useState } from 'react';
-import ProductDetailModal from './ProductDetailModal';
+import UpdatedProductDetailModal from './ProductDetailModal';
 
 type Product = {
   _id: string;
@@ -38,7 +38,7 @@ export default function ProductCard({ product }: { product: Product }) {
         </div>
       </div>
 
-      <ProductDetailModal 
+      <UpdatedProductDetailModal 
         isOpen={showModal} 
         onClose={() => setShowModal(false)} 
         product={product} 

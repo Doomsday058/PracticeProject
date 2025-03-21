@@ -1,5 +1,4 @@
 //app/components/Modal.tsx
-'use client';
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -55,7 +54,7 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
   return createPortal(
     <div 
       ref={overlayRef}
-      className="fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300"
+      className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300"
     >
       <div 
         className="bg-gray-800 rounded-lg shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 opacity-100 scale-100"

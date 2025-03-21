@@ -80,18 +80,7 @@ export default function PriceRequestForm() {
                 </button>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div>
-                  <label className="block mb-2">Компания</label>
-                  <input 
-                    type="text" 
-                    value={user?.companyName || ''}
-                    disabled
-                    className="w-full bg-gray-700 rounded p-3 text-white"
-                    placeholder={user ? '' : 'Требуется авторизация'}
-                  />
-                </div>
-                
+              <form onSubmit={handleSubmit} className="space-y-6">                
                 <div>
                   <label className="block mb-2">Email для получения прайса</label>
                   <input 
