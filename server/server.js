@@ -1,3 +1,4 @@
+// Server.js
 import express from 'express'
 import cors from 'cors'
 import dotenv from 'dotenv'
@@ -118,20 +119,45 @@ app.post('/api/upload-price', authMiddleware, async (req, res) => {
   }
 })
 
+// Обновленный обработчик запроса прайс-листа в server.js
+
 // Запрос прайса
 app.post('/api/request-price', authMiddleware, async (req, res) => {
   try {
+    // Проверяем, существует ли пользователь и его email
+    if (!req.user || !req.user.email) {
+      return res.status(400).json({ 
+        message: 'Некорректные данные пользователя'
+      });
+    }
+    
+    // Получаем товары из базы данных для включения в прайс-лист
+    await dbConnect();
+    const products = await Product.find({});
+    
+    // Создаем запись о запросе прайс-листа
     const priceRequest = await PriceRequest.create({
       user: req.user._id,
-      downloadLink: `/price-${Date.now()}.pdf`,
-      expiresAt: new Date(Date.now() + 3*24*60*60*1000)
-    })
+      email: req.user.email,
+      requestDate: new Date(),
+      status: 'sent',
+      expiresAt: new Date(Date.now() + 3*24*60*60*1000) // Срок действия 3 дня
+    });
     
-    // Здесь логика генерации PDF и отправки на почту
-    sendPriceByEmail(req.user.email, priceRequest.downloadLink)
+    // Отправляем прайс-лист по электронной почте
+    await sendPriceByEmail(req.user.email, products);
     
-    res.json({ message: 'Price list sent to your email' })
+    res.status(200).json({ 
+      success: true, 
+      message: 'Прайс-лист успешно отправлен на вашу почту',
+      requestId: priceRequest._id
+    });
+    
   } catch (error) {
-    res.status(500).json({ message: error.message })
+    console.error('Ошибка при запросе прайс-листа:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Произошла ошибка при отправке прайс-листа'
+    });
   }
-})
+});

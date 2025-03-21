@@ -1,22 +1,36 @@
-// app/layout.tsx
-import './styles/globals.css'
-import { ReactNode } from 'react'
-import Navbar from './components/Navbar'
-import Footer from './components/Footer'
+'use client';
+import { useEffect } from 'react';
+import { UserProvider } from './components/UserContext';
+import Navbar from './components/Navbar';
+import AOS from 'aos';
+import './styles/globals.css';
 
-export const metadata = {
-  title: 'VOSTOK TRADE COMPANY',
-  description: 'Оптовая продажа напитков'
-}
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  // Инициализация AOS (Animate On Scroll)
+  useEffect(() => {
+    AOS.init({
+      duration: 800,
+      easing: 'ease-in-out',
+      once: true,
+    });
+  }, []);
 
-export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ru" className="scroll-smooth">
-      <body className="bg-gray-900 text-white">
-        <Navbar />
-        <main>{children}</main>
-        <Footer />
+    <html lang="ru">
+      <head>
+        <title>VOSTOK TRADE COMPANY</title>
+        <meta name="description" content="Оптовые поставки напитков высшего качества" />
+      </head>
+      <body>
+        <UserProvider>
+          <Navbar />
+          <main>{children}</main>
+        </UserProvider>
       </body>
     </html>
-  )
+  );
 }

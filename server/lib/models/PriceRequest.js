@@ -1,23 +1,36 @@
-// models/PriceRequest.js
-import mongoose from 'mongoose'
+// server/lib/models/PriceRequest.js
+import mongoose from 'mongoose';
 
-const PriceRequestSchema = new mongoose.Schema({
-  user: { 
-    type: mongoose.Schema.Types.ObjectId, 
-    ref: 'User', 
-    required: true 
+const priceRequestSchema = new mongoose.Schema({
+  user: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
   },
-  requestedAt: { 
-    type: Date, 
-    default: Date.now 
+  email: {
+    type: String,
+    required: true
   },
-  sentAt: Date,
-  downloadLink: String,
-  expiresAt: { 
-    type: Date, 
-    default: () => Date.now() + 3*24*60*60*1000 // 3 дня
+  requestDate: {
+    type: Date,
+    default: Date.now
+  },
+  status: {
+    type: String,
+    enum: ['pending', 'sent', 'failed'],
+    default: 'pending'
+  },
+  downloadLink: {
+    type: String
+  },
+  expiresAt: {
+    type: Date,
+    required: true
   }
-})
+}, {
+  timestamps: true
+});
 
-export default mongoose.models.PriceRequest || 
-  mongoose.model('PriceRequest', PriceRequestSchema)
+const PriceRequest = mongoose.models.PriceRequest || mongoose.model('PriceRequest', priceRequestSchema);
+
+export default PriceRequest;
