@@ -1,22 +1,20 @@
-import mongoose from 'mongoose'
+// server/lib/db.js
+import mongoose from 'mongoose';
 
 const dbConnect = async () => {
-  if (!process.env.MONGODB_URI) {
-    throw new Error('Отсутствует переменная окружения MONGODB_URI в .env')
+  if (mongoose.connection.readyState >= 1) {
+    return;
   }
-
-  // Если соединение уже установлено — пропускаем
-  if (mongoose.connection.readyState === 1) {
-    return
-  }
-
   try {
-    await mongoose.connect(process.env.MONGODB_URI)
-    console.log('MongoDB успешно подключена')
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("Connected to MongoDB");
   } catch (error) {
-    console.error('Ошибка подключения к MongoDB:', error)
-    throw new Error('Не удалось подключиться к базе данных')
+    console.error("MongoDB connection error:", error);
+    throw error;
   }
-}
+};
 
-export default dbConnect
+export default dbConnect;
