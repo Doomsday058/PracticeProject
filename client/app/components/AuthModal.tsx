@@ -146,54 +146,54 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       }
     >
       {error && (
-        <div className="bg-red-900/50 border border-red-700 text-white p-3 rounded mb-4">
+        <div className="bg-red-900/30 border border-red-800 text-white p-4 rounded mb-5">
           {error}
         </div>
       )}
 
       {mode === 'login' && (
-        <form onSubmit={handleLoginSubmit} className="space-y-4">
+        <form onSubmit={handleLoginSubmit} className="space-y-5">
           <div>
-            <label className="block text-white mb-2">Email</label>
+            <label className="block text-white mb-2 font-montserrat">Email</label>
             <input 
               name="email" 
               type="email" 
               value={loginForm.email} 
               onChange={handleLoginChange} 
-              className="w-full p-3 rounded bg-gray-700 text-white" 
+              className="w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500" 
               required 
             />
           </div>
           <div>
-            <label className="block text-white mb-2">Пароль</label>
+            <label className="block text-white mb-2 font-montserrat">Пароль</label>
             <input 
               name="password" 
               type="password" 
               value={loginForm.password} 
               onChange={handleLoginChange} 
-              className="w-full p-3 rounded bg-gray-700 text-white" 
+              className="w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500" 
               required 
             />
           </div>
           <button 
             type="submit" 
             disabled={isLoading}
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded transition-colors text-white disabled:opacity-70"
+            className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded transition-colors text-white font-montserrat font-semibold disabled:opacity-70"
           >
             {isLoading ? 'Вход...' : 'Войти'}
           </button>
-          <div className="flex justify-between text-sm mt-4">
+          <div className="flex justify-between text-sm mt-4 font-montserrat">
             <button 
               type="button" 
               onClick={() => switchMode('forgot')}
-              className="text-indigo-400 hover:text-indigo-300"
+              className="text-gray-400 hover:text-gray-300"
             >
               Забыли пароль?
             </button>
             <button 
               type="button" 
               onClick={() => switchMode('register')}
-              className="text-indigo-400 hover:text-indigo-300"
+              className="text-gray-400 hover:text-gray-300"
             >
               Регистрация
             </button>
@@ -202,13 +202,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       )}
 
       {mode === 'register' && (
-        <form onSubmit={handleRegisterSubmit} className="space-y-4">
+        <form onSubmit={handleRegisterSubmit} className="space-y-5">
           <div>
-            <label className="block text-white mb-2">Тип аккаунта</label>
+            <label className="block text-white mb-2 font-montserrat">Тип аккаунта</label>
             <select
               value={userType}
               onChange={handleUserTypeChange}
-              className="w-full p-3 rounded bg-gray-700 text-white"
+              className="w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500"
             >
               <option value="personal">Физическое лицо</option>
               <option value="business">Юридическое лицо</option>
@@ -217,38 +217,38 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
           {userType === 'business' && (
             <div>
-              <label className="block text-white mb-2">Название компании</label>
+              <label className="block text-white mb-2 font-montserrat">Название компании</label>
               <input 
                 name="companyName" 
                 type="text" 
                 value={registerForm.companyName} 
                 onChange={handleRegisterChange} 
-                className="w-full p-3 rounded bg-gray-700 text-white" 
+                className="w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500" 
                 required={userType === 'business'}
               />
             </div>
           )}
 
           <div>
-            <label className="block text-white mb-2">Email</label>
+            <label className="block text-white mb-2 font-montserrat">Email</label>
             <input 
               name="email" 
               type="email" 
               value={registerForm.email} 
               onChange={handleRegisterChange} 
-              className="w-full p-3 rounded bg-gray-700 text-white" 
+              className="w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500" 
               required 
             />
           </div>
           
           <div>
-            <label className="block text-white mb-2">Пароль</label>
+            <label className="block text-white mb-2 font-montserrat">Пароль</label>
             <input 
               name="password" 
               type="password" 
               value={registerForm.password} 
               onChange={handleRegisterChange} 
-              className="w-full p-3 rounded bg-gray-700 text-white" 
+              className="w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500" 
               required 
             />
           </div>
@@ -256,16 +256,16 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           <button 
             type="submit" 
             disabled={isLoading}
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded transition-colors text-white disabled:opacity-70"
+            className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded transition-colors text-white font-montserrat font-semibold disabled:opacity-70"
           >
             {isLoading ? 'Регистрация...' : 'Зарегистрироваться'}
           </button>
           
-          <div className="text-sm mt-4 text-center">
+          <div className="text-sm mt-4 text-center font-montserrat">
             <button 
               type="button" 
               onClick={() => switchMode('login')}
-              className="text-indigo-400 hover:text-indigo-300"
+              className="text-gray-400 hover:text-gray-300"
             >
               Уже есть аккаунт? Войти
             </button>
@@ -274,33 +274,33 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
       )}
 
       {mode === 'forgot' && !resetSent && (
-        <form onSubmit={handleForgotSubmit} className="space-y-4">
-          <p className="text-gray-300 mb-4">
+        <form onSubmit={handleForgotSubmit} className="space-y-5">
+          <p className="text-gray-300 mb-4 font-montserrat">
             Введите ваш email, и мы отправим инструкции по восстановлению пароля.
           </p>
           <div>
-            <label className="block text-white mb-2">Email</label>
+            <label className="block text-white mb-2 font-montserrat">Email</label>
             <input 
               name="email" 
               type="email" 
               value={forgotForm.email} 
               onChange={handleForgotChange} 
-              className="w-full p-3 rounded bg-gray-700 text-white" 
+              className="w-full p-3 rounded bg-gray-800 text-white border border-gray-700 focus:border-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-500" 
               required 
             />
           </div>
           <button 
             type="submit" 
             disabled={isLoading}
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded transition-colors text-white disabled:opacity-70"
+            className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded transition-colors text-white font-montserrat font-semibold disabled:opacity-70"
           >
             {isLoading ? 'Отправка...' : 'Восстановить пароль'}
           </button>
-          <div className="text-sm mt-4 text-center">
+          <div className="text-sm mt-4 text-center font-montserrat">
             <button 
               type="button" 
               onClick={() => switchMode('login')}
-              className="text-indigo-400 hover:text-indigo-300"
+              className="text-gray-400 hover:text-gray-300"
             >
               Вернуться ко входу
             </button>
@@ -319,13 +319,13 @@ export default function AuthModal({ isOpen, onClose }: AuthModalProps) {
           >
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
-          <p className="text-xl font-semibold text-white mb-2">Инструкции отправлены</p>
-          <p className="text-gray-300 mb-6">
+          <p className="text-xl font-semibold text-white mb-2 font-montserrat">Инструкции отправлены</p>
+          <p className="text-gray-300 mb-6 font-montserrat">
             Проверьте вашу электронную почту для получения инструкций по восстановлению пароля.
           </p>
           <button 
             onClick={() => switchMode('login')}
-            className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded transition-colors text-white"
+            className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded transition-colors text-white font-montserrat font-semibold"
           >
             Вернуться ко входу
           </button>

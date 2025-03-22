@@ -20,23 +20,17 @@ export default function HeroSection() {
     >
       <div className="relative z-10 text-center text-white px-4">
         <h1 className="text-5xl md:text-7xl font-bold font-russo mb-6" data-aos="fade-down">
-          Добро пожаловать в <span className="text-indigo-400">VOSTOK TRADE COMPANY</span>
+          Добро пожаловать в <span className="text-blue-500">VOSTOK TRADE COMPANY</span>
         </h1>
-        <p className="text-xl md:text-2xl mb-10" data-aos="fade-up">
+        <p className="text-xl md:text-2xl mb-10 font-montserrat" data-aos="fade-up">
           Не просто поставщик — ваш партнер по росту
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center" data-aos="zoom-in">
           <a
             href="#products"
-            className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 transition-all duration-300 rounded-lg text-white text-lg font-semibold transform hover:scale-105"
+            className="px-8 py-4 bg-blue-600 hover:bg-blue-700 transition-all duration-300 rounded-lg text-white text-lg font-semibold transform hover:scale-105 font-montserrat"
           >
             Наш ассортимент
-          </a>
-          <a
-            href="#price-request"
-            className="px-8 py-4 bg-gray-700 hover:bg-gray-600 transition-all duration-300 rounded-lg text-white text-lg font-semibold transform hover:scale-105"
-          >
-            Запросить прайс
           </a>
         </div>
       </div>

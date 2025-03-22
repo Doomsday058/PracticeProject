@@ -2,7 +2,7 @@
 'use client';
 import { useState } from 'react';
 import { useUser } from './UserContext';
-import AuthModal from './AuthModal';
+import BlueAuthModal from './AuthModal';
 
 export default function PriceRequestForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -50,9 +50,9 @@ export default function PriceRequestForm() {
         <div className="max-w-5xl mx-auto px-4 text-white relative z-10">
           <h2 className="text-3xl font-russo mb-8 text-center">Получить оптовый прайс</h2>
           
-          <div className="max-w-md mx-auto bg-gray-800/90 p-8 rounded-lg shadow-lg">
+          <div className="max-w-md mx-auto bg-gray-900/80 p-8 rounded-lg shadow-lg border border-gray-800">
             {error && (
-              <div className="mb-6 p-4 bg-red-900/50 border border-red-700 rounded text-white">
+              <div className="mb-6 p-4 bg-red-900/30 border border-red-800 rounded text-white font-montserrat">
                 {error}
               </div>
             )}
@@ -68,13 +68,13 @@ export default function PriceRequestForm() {
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                 </svg>
-                <h3 className="text-xl font-semibold mb-2">Прайс-лист отправлен!</h3>
-                <p className="text-gray-300 mb-6">
+                <h3 className="text-xl font-semibold mb-2 font-montserrat">Прайс-лист отправлен!</h3>
+                <p className="text-gray-300 mb-6 font-montserrat">
                   Проверьте вашу электронную почту для получения актуального прайс-листа.
                 </p>
                 <button 
                   onClick={() => setSuccess(false)}
-                  className="py-2 px-6 bg-indigo-600 hover:bg-indigo-700 rounded transition-colors"
+                  className="py-3 px-6 bg-blue-600 hover:bg-blue-700 rounded transition-colors font-montserrat font-semibold"
                 >
                   Запросить снова
                 </button>
@@ -82,12 +82,12 @@ export default function PriceRequestForm() {
             ) : (
               <form onSubmit={handleSubmit} className="space-y-6">                
                 <div>
-                  <label className="block mb-2">Email для получения прайса</label>
+                  <label className="block mb-2 font-montserrat">Email для получения прайса</label>
                   <input 
                     type="email" 
                     value={user?.email || ''}
                     disabled
-                    className="w-full bg-gray-700 rounded p-3 text-white"
+                    className="w-full bg-gray-800 rounded p-3 text-white border border-gray-700 font-montserrat"
                     placeholder={user ? '' : 'Требуется авторизация'}
                   />
                 </div>
@@ -95,7 +95,7 @@ export default function PriceRequestForm() {
                 <button 
                   type="submit"
                   disabled={isLoading || !user}
-                  className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded transition-colors text-white font-semibold disabled:opacity-70"
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded transition-colors text-white font-montserrat font-semibold disabled:opacity-70"
                 >
                   {isLoading ? 'Отправка...' : user ? 'Получить прайс-лист' : 'Войдите, чтобы запросить прайс'}
                 </button>
@@ -104,13 +104,13 @@ export default function PriceRequestForm() {
                   <button
                     type="button"
                     onClick={() => setShowAuthModal(true)}
-                    className="w-full py-3 bg-gray-700 hover:bg-gray-600 rounded transition-colors text-white"
+                    className="w-full py-3 bg-gray-700 hover:bg-gray-600 rounded transition-colors text-white font-montserrat"
                   >
                     Вход / Регистрация
                   </button>
                 )}
                 
-                <p className="text-sm text-gray-400 text-center mt-4">
+                <p className="text-sm text-gray-400 text-center mt-4 font-montserrat">
                   Прайс-лист будет отправлен на указанный email в формате Excel
                 </p>
               </form>
@@ -119,7 +119,7 @@ export default function PriceRequestForm() {
         </div>
       </section>
       
-      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+      <BlueAuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </>
   );
 }

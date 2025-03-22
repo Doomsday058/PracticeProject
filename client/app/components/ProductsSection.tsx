@@ -1,7 +1,7 @@
 //app/components/ProductsSection
 
 'use client';
-import UpdatedProductCard from './ProductCard';
+import BlueProductCard from './ProductCard';
 
 // Обновленные данные о продуктах
 const products = [
@@ -55,14 +55,14 @@ export default function ProductsSection() {
       <div className="max-w-7xl mx-auto px-4 text-white">
         <div className="text-center mb-12">
           <h2 className="text-4xl font-russo mb-4">Наша продукция</h2>
-          <p className="text-lg text-gray-300 max-w-3xl mx-auto">
+          <p className="text-lg text-gray-300 max-w-3xl mx-auto font-montserrat">
             Предлагаем широкий ассортимент высококачественных напитков для оптовых закупок. Каждый продукт тщательно отобран для наших клиентов.
           </p>
         </div>
         
         <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {products.map(product => (
-            <UpdatedProductCard key={product._id} product={product} />
+            <BlueProductCard key={product._id} product={product} />
           ))}
         </div>
       </div>

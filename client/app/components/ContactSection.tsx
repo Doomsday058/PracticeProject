@@ -11,8 +11,8 @@ export default function ContactSection() {
             <div className="mb-4">
               <h3 className="text-xl font-semibold">Телефон</h3>
               <p className="flex items-center">
-                <FaPhoneAlt className="mr-2 text-indigo-400" />
-                <a href="tel:+1234567890" className="text-indigo-400 hover:text-indigo-500">
+                <FaPhoneAlt className="mr-2 text-blue-400" />
+                <a href="tel:+1234567890" className="text-blue-400 hover:text-blue-500">
                   +7 (777) 988-7045
                 </a>
               </p>
@@ -20,8 +20,8 @@ export default function ContactSection() {
             <div className="mb-4">
               <h3 className="text-xl font-semibold">Email</h3>
               <p className="flex items-center">
-                <FaEnvelope className="mr-2 text-indigo-400" />
-                <a href="mailto:info@vostoktrade.com" className="text-indigo-400 hover:text-indigo-500">
+                <FaEnvelope className="mr-2 text-blue-400" />
+                <a href="mailto:info@vostoktrade.com" className="text-blue-400 hover:text-blue-500">
                   info@vostoktrade.com
                 </a>
               </p>

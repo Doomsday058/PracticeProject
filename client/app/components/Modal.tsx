@@ -1,4 +1,5 @@
 //app/components/Modal.tsx
+'use client';
 import { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 
@@ -54,26 +55,30 @@ export default function Modal({ isOpen, onClose, children, title }: ModalProps) 
   return createPortal(
     <div 
       ref={overlayRef}
-      className="fixed inset-0 bg-black bg-opacity-50 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300"
+      className="fixed inset-0 bg-black bg-opacity-75 backdrop-blur-sm flex items-center justify-center z-50 transition-opacity duration-300"
     >
       <div 
-        className="bg-gray-800 rounded-lg shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 opacity-100 scale-100"
+        className="bg-gray-900 rounded-lg shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto transform transition-all duration-300 opacity-100 scale-100 border border-gray-800"
         data-aos="zoom-in"
       >
-        <div className="p-6">
+        {/* Переработанный заголовок с flexbox для правильного позиционирования крестика */}
+        <div className="flex items-center justify-between border-b border-gray-800 p-4">
           {title && (
-            <div className="mb-4 pb-3 border-b border-gray-700">
-              <h2 className="text-2xl font-russo text-white">{title}</h2>
-            </div>
+            <h2 className="text-2xl font-russo text-white">{title}</h2>
           )}
           <button 
-            className="absolute top-3 right-3 text-gray-400 hover:text-white"
             onClick={onClose}
+            className="ml-auto text-blue-500 hover:text-blue-300 transition-colors w-8 h-8 flex items-center justify-center rounded-full bg-gray-800 flex-shrink-0"
+            aria-label="Закрыть"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
+        </div>
+        
+        {/* Содержимое модального окна */}
+        <div className="p-4">
           {children}
         </div>
       </div>

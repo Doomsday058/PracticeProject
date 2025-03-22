@@ -27,7 +27,7 @@ export default function RootLayout({
         <title>VOSTOK TRADE COMPANY</title>
         <meta name="description" content="Оптовые поставки напитков высшего качества" />
       </head>
-      <body>
+      <body className="bg-gray-900 font-montserrat">
         <UserProvider>
           <Navbar />
           <main>{children}</main>

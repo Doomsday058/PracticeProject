@@ -14,12 +14,16 @@ html {
 body {
   font-family: 'Montserrat', sans-serif;
   color: #fff;
-  background-color: #0f172a;
+  background-color: #111827; /* темно-серый, почти черный */
 }
 
 /* Пользовательский класс для фирменного шрифта */
 .font-russo {
   font-family: 'Russo One', sans-serif;
+}
+
+.font-montserrat {
+  font-family: 'Montserrat', sans-serif;
 }
 
 /* Плавные переходы */
@@ -42,7 +46,7 @@ a, button {
   content: '';
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.65); /* Немного уменьшенное затемнение */
+  background: rgba(0, 0, 0, 0.75); /* Более сильное затемнение для темного стиля */
   z-index: -1;
 }
 
@@ -85,30 +89,71 @@ button:hover::after,
   transform: translateY(0);
 }
 
-/* Улучшенные стили для навигации */
-.section-nav {
-  transition: background-color 0.3s ease;
-}
-
-.section-nav.scrolled {
-  background-color: rgba(15, 23, 42, 0.9);
-  backdrop-filter: blur(10px);
-}
-
-/* Стили для скроллбара */
+/* Улучшенные стили для скроллбара */
 ::-webkit-scrollbar {
   width: 10px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #1e293b;
+  background: #111827;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #4f46e5;
+  background: #3b82f6; /* Голубой цвет */
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #6366f1;
+  background: #2563eb;
+}
+
+/* Стили для слайдера отзывов */
+.slider-container {
+  overflow: hidden;
+  position: relative;
+}
+
+.slider-track {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.slider-item {
+  flex: 0 0 100%;
+}
+
+/* Затемнение градиента для карточек */
+.card-gradient {
+  background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, rgba(0,0,0,0) 100%);
+}
+
+/* Стили для модальных окон */
+.modal-overlay {
+  backdrop-filter: blur(8px);
+}
+
+/* Кастомные тени */
+.blue-glow {
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+}
+
+/* Стили для анимированных элементов */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+/* Кастомные стили для форм */
+input, select, textarea {
+  font-family: 'Montserrat', sans-serif;
+}
+
+input::placeholder, 
+select::placeholder, 
+textarea::placeholder {
+  color: rgba(156, 163, 175, 0.7);
 }

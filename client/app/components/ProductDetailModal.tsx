@@ -2,7 +2,7 @@
 'use client';
 import { useState } from 'react';
 import { useUser } from './UserContext';
-import AuthModal from './AuthModal';
+import BlueAuthModal from './AuthModal';
 import Modal from './Modal';
 
 type Product = {
@@ -60,30 +60,31 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
             <img 
               src={product.image} 
               alt={product.title} 
-              className="w-full h-52 object-cover"
+              className="w-full h-60 object-cover"
             />
+            <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent opacity-60" />
           </div>
           
           <div>
-            <h3 className="text-xl font-russo mb-2 text-indigo-400">{product.title}</h3>
-            <p className="text-gray-300 mb-4">{product.description}</p>
+            <h3 className="text-xl font-russo mb-3 text-white">{product.title}</h3>
+            <p className="text-gray-300 mb-5 font-montserrat">{product.description}</p>
             
             {product.details && (
-              <div className="mt-4">
-                <h4 className="text-lg font-semibold mb-2 text-white">Характеристики</h4>
-                <p className="text-gray-300">{product.details}</p>
+              <div className="mt-5 bg-gray-800/40 p-4 rounded-lg border border-gray-800">
+                <h4 className="text-lg font-semibold mb-2 text-white font-montserrat">Характеристики</h4>
+                <p className="text-gray-300 font-montserrat">{product.details}</p>
               </div>
             )}
           </div>
           
           {success ? (
-            <div className="bg-green-900/50 border border-green-700 text-white p-4 rounded">
-              <p className="font-semibold">Прайс-лист отправлен на вашу почту!</p>
-              <p className="mt-2 text-sm">Проверьте ваш почтовый ящик.</p>
+            <div className="bg-green-900/30 border border-green-800 text-white p-5 rounded-lg">
+              <p className="font-semibold font-montserrat">Прайс-лист отправлен на вашу почту!</p>
+              <p className="mt-2 text-sm font-montserrat">Проверьте ваш почтовый ящик.</p>
             </div>
           ) : (
-            <div className="flex flex-col space-y-4">
-              <p className="text-white">
+            <div className="flex flex-col space-y-4 mt-4">
+              <p className="text-white font-montserrat">
                 {user ? 
                   'Запросите актуальный прайс-лист с оптовыми ценами:' : 
                   'Войдите или зарегистрируйтесь, чтобы запросить прайс-лист:'
@@ -93,7 +94,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
               <button
                 onClick={handleRequestPrice}
                 disabled={isLoading}
-                className="w-full py-3 bg-indigo-600 hover:bg-indigo-700 rounded-md transition-colors duration-300 text-white font-semibold disabled:opacity-70"
+                className="w-full py-3 bg-blue-600 hover:bg-blue-700 rounded-md transition-colors duration-300 text-white font-semibold font-montserrat disabled:opacity-70"
               >
                 {isLoading ? 'Отправка...' : 'Получить прайс-лист'}
               </button>
@@ -101,7 +102,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
               {!user && (
                 <button
                   onClick={() => setShowAuthModal(true)}
-                  className="w-full py-3 bg-gray-700 hover:bg-gray-600 rounded-md transition-colors duration-300 text-white font-semibold"
+                  className="w-full py-3 bg-gray-700 hover:bg-gray-600 rounded-md transition-colors duration-300 text-white font-semibold font-montserrat"
                 >
                   Вход / Регистрация
                 </button>
@@ -111,7 +112,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
         </div>
       </Modal>
       
-      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+      <BlueAuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
     </>
   );
 }

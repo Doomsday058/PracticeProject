@@ -19,6 +19,23 @@ const app = express()
 app.use(cors())        // Разрешаем CORS
 app.use(express.json()) // Для парсинга JSON
 
+// Маршрут для получения данных текущего пользователя
+app.get('/api/auth/me', async (req, res) => {
+  const token = req.headers.authorization?.split(' ')[1]
+  if (!token) return res.status(401).json({ message: 'Not authorized' })
+  
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET)
+    const user = await User.findById(decoded.id).select('-password')
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' })
+    }
+    res.json({ user })
+  } catch (error) {
+    res.status(401).json({ message: 'Invalid token' })
+  }
+})
+
 // Маршрут для получения списка товаров
 app.get('/api/products', async (req, res) => {
   try {
@@ -31,6 +48,7 @@ app.get('/api/products', async (req, res) => {
   }
 })
 
+// Маршрут для создания нового товара
 app.post('/api/products', async (req, res) => {
   try {
     await dbConnect()
@@ -40,12 +58,6 @@ app.post('/api/products', async (req, res) => {
     console.error('Ошибка при создании товара:', error)
     res.status(500).json({ error: 'Server error' })
   }
-})
-
-// Запуск сервера
-const PORT = process.env.PORT || 3001
-app.listen(PORT, () => {
-  console.log(`Сервер запущен на порту ${PORT}`)
 })
 
 // Middleware авторизации
@@ -62,22 +74,29 @@ const authMiddleware = async (req, res, next) => {
   }
 }
 
-// Регистрация
+// Регистрация (обновлено для поддержки userType вместо inn)
 app.post('/api/register', async (req, res) => {
-  const { companyName, email, password, inn } = req.body
+  const { companyName, email, password, userType } = req.body
   
   try {
+    // Проверка, не существует ли уже такого email
+    const existingUser = await User.findOne({ email })
+    if (existingUser) {
+      return res.status(400).json({ message: 'Пользователь с таким email уже существует' })
+    }
+    
     const hashedPassword = await bcrypt.hash(password, 12)
     const user = await User.create({
-      companyName,
+      companyName: companyName || '',
       email,
       password: hashedPassword,
-      inn
+      userType: userType || 'personal'
     })
     
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' })
     res.status(201).json({ user: { ...user._doc, password: null }, token })
   } catch (error) {
+    console.error('Ошибка при регистрации:', error)
     res.status(500).json({ message: error.message })
   }
 })
@@ -89,12 +108,13 @@ app.post('/api/login', async (req, res) => {
   try {
     const user = await User.findOne({ email })
     if (!user || !(await bcrypt.compare(password, user.password))) {
-      return res.status(401).json({ message: 'Invalid credentials' })
+      return res.status(401).json({ message: 'Неверные учетные данные' })
     }
     
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '30d' })
     res.json({ token, user: { ...user._doc, password: null } })
   } catch (error) {
+    console.error('Ошибка при входе:', error)
     res.status(500).json({ message: error.message })
   }
 })
@@ -118,8 +138,6 @@ app.post('/api/upload-price', authMiddleware, async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 })
-
-// Обновленный обработчик запроса прайс-листа в server.js
 
 // Запрос прайса
 app.post('/api/request-price', authMiddleware, async (req, res) => {
@@ -161,3 +179,9 @@ app.post('/api/request-price', authMiddleware, async (req, res) => {
     });
   }
 });
+
+// Запуск сервера
+const PORT = process.env.PORT || 5000
+app.listen(PORT, () => {
+  console.log(`Сервер запущен на порту ${PORT}`)
+})
