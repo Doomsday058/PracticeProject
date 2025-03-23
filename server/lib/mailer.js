@@ -1,73 +1,100 @@
 // server/lib/mailer.js
+// server/lib/mailer.js
 import nodemailer from 'nodemailer';
-import xlsx from 'xlsx';
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Создаем транспорт для отправки писем
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: true, // для порта 465 (SSL)
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS
-  }
-});
+// Путь к готовому файлу прайс-листа
+const PRICE_LIST_PATH = path.join(__dirname, '..', 'price.xlsx');
 
-/**
- * Генерирует Excel-файл с прайс-листом
- * @param {Array} products - Массив товаров из базы данных
- * @returns {Promise<string>} - Путь к сгенерированному Excel файлу
- */
-export async function generateExcelPriceList(products) {
-  // Создаем новый Excel-файл
-  const workbook = xlsx.utils.book_new();
+// Создаем и тестируем транспорт для отправки писем
+let transporter;
+
+const initMailer = async () => {
+  console.log('Инициализация почтового сервиса...');
   
-  // Преобразуем товары в формат для Excel
-  const productData = products.map(product => ({
-    'Название': product.title,
-    'Описание': product.description,
-    'Цена (опт)': product.price || 'По запросу',
-    'Артикул': product._id
-  }));
-  
-  // Создаем лист с данными
-  const worksheet = xlsx.utils.json_to_sheet(productData);
-  
-  // Добавляем лист в книгу
-  xlsx.utils.book_append_sheet(workbook, worksheet, 'Прайс-лист');
-  
-  // Создаем временный файл для сохранения
-  const tempDir = path.join(process.cwd(), 'tmp');
-  
-  // Проверяем существование директории, если нет - создаем
-  if (!fs.existsSync(tempDir)) {
-    fs.mkdirSync(tempDir, { recursive: true });
+  try {
+    // Проверка, настроены ли переменные окружения
+    if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+      console.error('❌ Ошибка: Не настроены параметры SMTP в .env файле');
+      console.log('Требуются параметры: SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASS');
+      return;
+    }
+    // Используем настройки из .env
+    transporter = nodemailer.createTransport({
+      host: process.env.SMTP_HOST,
+      port: Number(process.env.SMTP_PORT || 587),
+      secure: process.env.SMTP_PORT === '465',
+      auth: {
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS
+      }
+    });
+    
+    // Проверяем соединение
+    await transporter.verify();
+    console.log('✅ Почтовый сервис успешно инициализирован');
+    
+    // Проверяем наличие файла прайс-листа
+    if (fs.existsSync(PRICE_LIST_PATH)) {
+      console.log('✅ Файл прайс-листа найден:', PRICE_LIST_PATH);
+    } else {
+      console.warn('⚠️ Внимание: Файл прайс-листа не найден по пути:', PRICE_LIST_PATH);
+      console.log('Пожалуйста, поместите файл price.xlsx в корневую папку сервера.');
+    }
+  } catch (error) {
+    console.error('❌ Ошибка при инициализации почтового сервиса:', error);
+    
+    // Создаем резервный транспорт с использованием ethereal.email для тестирования
+    console.log('🔄 Создание резервного тестового транспорта...');
+    try {
+      const testAccount = await nodemailer.createTestAccount();
+      transporter = nodemailer.createTransport({
+        host: 'smtp.ethereal.email',
+        port: 587,
+        secure: false,
+        auth: {
+          user: testAccount.user,
+          pass: testAccount.pass
+        }
+      });
+      console.log('✅ Резервный почтовый сервис успешно инициализирован');
+      console.log(`📧 Email: ${testAccount.user}`);
+      console.log(`📧 Password: ${testAccount.pass}`);
+      console.log(`📧 Просмотр писем: https://ethereal.email/`);
+    } catch (fallbackError) {
+      console.error('❌ Не удалось создать даже резервный почтовый сервис:', fallbackError);
+    }
   }
-  
-  const fileName = `price-list-${Date.now()}.xlsx`;
-  const filePath = path.join(tempDir, fileName);
-  
-  // Записываем файл
-  xlsx.writeFile(workbook, filePath);
-  
-  return filePath;
-}
+};
+
+// Инициализируем почтовый сервис при импорте модуля
+initMailer();
 
 /**
  * Отправляет письмо с прайс-листом в виде Excel-файла
  * @param {string} toEmail - Email получателя
- * @param {Array} products - Массив товаров для прайс-листа
- * @returns {Promise<void>}
+ * @param {Array} products - Массив товаров (не используется, т.к. используется готовый файл)
+ * @returns {Promise<boolean>} - Успешность отправки
  */
 export async function sendPriceByEmail(toEmail, products) {
   try {
-    // Генерируем Excel-файл
-    const excelFilePath = await generateExcelPriceList(products);
+    if (!transporter) {
+      // Если транспорт еще не инициализирован, пробуем еще раз
+      await initMailer();
+      if (!transporter) {
+        throw new Error('Почтовый сервис не инициализирован');
+      }
+    }
+    
+    // Проверяем наличие файла прайс-листа
+    if (!fs.existsSync(PRICE_LIST_PATH)) {
+      console.error('❌ Ошибка: Файл прайс-листа не найден по пути:', PRICE_LIST_PATH);
+      throw new Error('Файл прайс-листа не найден. Пожалуйста, поместите файл price.xlsx в корневую папку сервера.');
+    }
     
     // Формируем HTML для письма с корпоративным стилем
     const htmlContent = `
@@ -133,22 +160,23 @@ export async function sendPriceByEmail(toEmail, products) {
       attachments: [
         {
           filename: 'price-list.xlsx',
-          path: excelFilePath
+          path: PRICE_LIST_PATH
         }
       ]
     };
     
     // Отправляем письмо
-    await transporter.sendMail(mailOptions);
+    const info = await transporter.sendMail(mailOptions);
+    console.log('✅ Письмо успешно отправлено:', info.messageId);
     
-    // Удаляем временный файл после отправки
-    fs.unlink(excelFilePath, (err) => {
-      if (err) console.error('Ошибка при удалении временного файла:', err);
-    });
+    // Для тестового сервиса ethereal показываем URL для просмотра письма
+    if (info.messageId && info.messageUrl) {
+      console.log('📧 URL для просмотра письма:', info.messageUrl);
+    }
     
     return true;
   } catch (error) {
-    console.error('Ошибка при отправке письма:', error);
+    console.error('❌ Ошибка при отправке письма:', error);
     throw error;
   }
 }

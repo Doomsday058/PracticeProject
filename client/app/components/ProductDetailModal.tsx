@@ -71,7 +71,7 @@ export default function ProductDetailModal({ isOpen, onClose, product }: Product
             
             {product.details && (
               <div className="mt-5 bg-gray-800/40 p-4 rounded-lg border border-gray-800">
-                <h4 className="text-lg font-semibold mb-2 text-white font-montserrat">Характеристики</h4>
+                <h4 className="text-lg font-semibold mb-2 text-white font-montserrat">Детали</h4>
                 <p className="text-gray-300 font-montserrat">{product.details}</p>
               </div>
             )}

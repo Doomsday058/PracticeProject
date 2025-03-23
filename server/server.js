@@ -14,6 +14,7 @@ import { fileURLToPath } from 'url'
 import { sendPriceByEmail } from './lib/mailer.js';
 
 dotenv.config() // Подключаем .env
+await dbConnect();
 
 const app = express()
 app.use(cors())        // Разрешаем CORS
@@ -36,10 +37,10 @@ app.get('/api/auth/me', async (req, res) => {
   }
 })
 
+
 // Маршрут для получения списка товаров
 app.get('/api/products', async (req, res) => {
   try {
-    await dbConnect() // Устанавливаем соединение с БД
     const products = await Product.find({})
     res.status(200).json(products)
   } catch (error) {
@@ -51,7 +52,6 @@ app.get('/api/products', async (req, res) => {
 // Маршрут для создания нового товара
 app.post('/api/products', async (req, res) => {
   try {
-    await dbConnect()
     const newProduct = await Product.create(req.body)
     res.status(201).json(newProduct)
   } catch (error) {
@@ -150,7 +150,6 @@ app.post('/api/request-price', authMiddleware, async (req, res) => {
     }
     
     // Получаем товары из базы данных для включения в прайс-лист
-    await dbConnect();
     const products = await Product.find({});
     
     // Создаем запись о запросе прайс-листа
@@ -176,6 +175,32 @@ app.post('/api/request-price', authMiddleware, async (req, res) => {
     res.status(500).json({ 
       success: false,
       message: 'Произошла ошибка при отправке прайс-листа'
+    });
+  }
+});
+
+// Получение истории запросов прайс-листов
+app.get('/api/price-requests', authMiddleware, async (req, res) => {
+  try {
+    // Проверяем, существует ли пользователь
+    if (!req.user || !req.user._id) {
+      return res.status(400).json({ 
+        message: 'Некорректные данные пользователя'
+      });
+    }
+    
+    // Получаем запросы для текущего пользователя
+    const priceRequests = await PriceRequest.find({ user: req.user._id })
+      .sort({ requestDate: -1 })  // Сортировка от новых к старым
+      .limit(10);  // Ограничиваем 10 последними запросами
+    
+    res.status(200).json(priceRequests);
+    
+  } catch (error) {
+    console.error('Ошибка при получении истории запросов:', error);
+    res.status(500).json({ 
+      success: false,
+      message: 'Произошла ошибка при получении истории запросов'
     });
   }
 });
